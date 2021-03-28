@@ -2,11 +2,13 @@ pragma solidity ^0.5.1;
 
 contract MattCoin {
 	uint256 public totalSupply;
+	mapping(address => uint256) public balanceOf;
 
-	// Constructor
-	// Set total number of tokens
-	// Read total number of tokens
-	constructor() public {
-		totalSupply = 1000000;
+
+	constructor(uint256 _initialSupply) public {
+		totalSupply = _initialSupply;
+
+		// allocate initial supply
+		balanceOf[msg.sender] = _initialSupply;
 	}
 }
