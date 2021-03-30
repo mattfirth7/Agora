@@ -2,7 +2,19 @@ var MattCoin = artifacts.require("MattCoin");
 
 contract('MattCoin', function(accounts) {
 
-	it('sets the total supply upon deployment', function() {
+	it('initializes the contract with the correct values', function() {
+		return MattCoin.deployed().then(function(instance) {
+			tokenInstance = instance;
+			return tokenInstance.name();
+		}).then(function(name) {
+			assert.equal(name, 'MattCoin', 'has correct name');
+			return tokenInstance.symbol();
+		}).then(function(symbol) {
+			assert.equal(symbol, 'MCN', 'has correct symbol');
+		});
+	});
+
+	it('allocates the total supply upon deployment', function() {
 		return MattCoin.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.totalSupply();
