@@ -52,6 +52,22 @@ contract('MattCoin', function(accounts) {
 			return tokenInstance.balanceOf(accounts[0]);
 		}).then(function(balance) {
 			assert.equal(balance.toNumber(), 7500000, 'deducts the amount from sending account');
+		});
+	});
+
+	it('approves tokens for delegated transfer', function() {
+		return MattCoin.deployed().then(function(instance) {
+			tokenInstance = instance;
+			return tokenInstance.approve.call(accounts[1], 100);
+		}).then(function(success) {
+			assert.equal(success, true, 'returns true');
+			return tokenInstance.approve(accounts[1], 100);
+		}).then(function(receipt) {
+			assert.equal(receipt.logs.length, 1, 'triggers one event');
+			assert.equal(receipt.logs[0].event, 'Approval', '"Approval" event');
+			assert.equal(receipt.logs[0].args._owner, accounts[0], 'logs the account the tokens are authorized by');
+			assert.equal(receipt.logs[0].args._spender, accounts[1], 'logs the account the tokens are authorized to');
+			assert.equal(receipt.logs[0].args._value, 2500000, 'logs the transfer amount');			
 		})
 	});
 });

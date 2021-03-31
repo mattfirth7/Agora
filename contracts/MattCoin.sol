@@ -14,6 +14,16 @@ contract MattCoin {
 		uint256 _value
 	);
 
+	event Approve(
+		address indexed _owner,
+		address indexed _spender,
+		uint256 _value
+	);
+
+	// transfer
+
+	// allowance
+
 	constructor(uint256 _initialSupply) public {
 		totalSupply = _initialSupply;
 
@@ -33,5 +43,17 @@ contract MattCoin {
 		// Return a boolean
 		return true;
 	}
+
+	// Approve
+	function approve(address _spender, uint256 _value) public returns (bool success) {
+		// allowance
+
+		// Approve event
+
+		return true;
+	}
+
+	// transferFrom
+
 
 }
