@@ -115,4 +115,38 @@ contract('MattCoin', function(accounts) {
 			assert.equal(allowance.toNumber(), 0, 'deducts the amount from the allowance');
 		});
 	});
+
+	it('creates stake for posts', function() {
+		return MattCoin.deployed().then(function(instance) {
+			tokenInstance = instance;
+			return tokenInstance.stake.call(100000000000000, 'test', 1, 1);
+		}).then(assert.fail).catch(function(error) {
+			assert(error.message.indexOf('revert') >= 0, 'error message must contain revert');
+			return tokenInstance.stake.call(1, 'test', 1, 1, { from: accounts[2] });
+		}).then(function(success) {
+			assert.equal(success, true, 'returns true');
+			return tokenInstance.stake(10, 'test', 1, 0, { from: accounts[2] });
+		}).then(function(receipt) {
+			assert.equal(receipt.logs.length, 1, 'triggers one event');
+			assert.equal(receipt.logs[0].event, 'Transfer', '"Transfer" event');
+			assert.equal(receipt.logs[0].args._from, accounts[2], 'logs the account the tokens are staked by');
+			assert.equal(receipt.logs[0].args._to, accounts[0], 'logs the tokens are sent to the admin account');
+			assert.equal(receipt.logs[0].args._value, 10, 'logs the transfer amount');
+			return tokenInstance.stakes(accounts[2], 'test', 0);
+		}).then(function(stake) {
+			assert.equal(stake.toNumber(), 10, 'sets the initial stake to the transfer amount');
+			return tokenInstance.stakes(accounts[2], 'test', 1);
+		}).then(function(upvotes) {
+			assert.equal(upvotes.toNumber(), 1, 'sets initial upvote count to 1');
+			return tokenInstance.stakes(accounts[2], 'test', 2);
+		}).then(function(comments) {
+			assert.equal(comments.toNumber(), 0, 'sets initial comment count to 0');
+			return tokenInstance.balanceOf(accounts[2]);
+		}).then(function(balance) {
+			assert.equal(balance.toNumber(), 80, 'deducts the staked amount from the staking account');
+			return tokenInstance.balanceOf(accounts[0]);
+		}).then(function(balance) {
+			assert.equal(balance.toNumber(), 7499910, 'adds the staked amount to the admin account');
+		});
+	});
 });

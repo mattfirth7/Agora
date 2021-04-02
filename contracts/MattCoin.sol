@@ -2,12 +2,15 @@ pragma solidity ^0.5.1;
 
 contract MattCoin {
 	// State variables
+	address private adminAccount = 0x62f1924784fb029F14D5B7575Af7357400B26012;
 	string public name = "MattCoin";
 	string public symbol = "MCN";
 	string public standard = "MattCoin v1.0";
 	uint256 public totalSupply;
 	mapping(address => uint256) public balanceOf;
 	mapping(address => mapping(address => uint256)) public allowance;
+	mapping(address => mapping(string => uint[])) public stakes;
+
 
 	event Transfer(
 		address indexed _from,
@@ -79,5 +82,25 @@ contract MattCoin {
 		// return a boolean
 		return true;
 	}
+
+	// stake
+	function stake(uint256 _value, string memory _postTitle, uint256 _upvotes, uint256 _comments) public returns (bool success) {
+		// Require msg.sender has enought tokens
+		require(balanceOf[msg.sender] >= _value);
+
+		// Define uint array of stats
+		uint[3] memory postStats = [_value, _upvotes, _comments];
+
+		// Change balances, stores stake with admin account
+		balanceOf[msg.sender] -= _value;
+		balanceOf[adminAccount] += _value; 
+		stakes[msg.sender][_postTitle] = postStats;
+
+		// Emit transfer event
+		emit Transfer(msg.sender, adminAccount, _value);
+
+		// return a boolean
+		return true;
+	} 
 
 }
