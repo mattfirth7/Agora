@@ -90,7 +90,7 @@ contract MattCoin {
 		require(balanceOf[msg.sender] >= _value);
 
 		// Define uint array of stats
-		uint[3] memory postStats = [_value, _upvotes, _comments];
+		uint[4] memory postStats = [_value, _upvotes, _comments, now];
 
 		// Change balances, stores stake with admin account
 		balanceOf[msg.sender] -= _value;
@@ -135,6 +135,26 @@ contract MattCoin {
 
 		// set stake based on upvotes and comments
 		stakes[_poster][_postTitle][0] = 1 + (3 * uint256(stakes[_poster][_postTitle][1]) + 1 * uint256(stakes[_poster][_postTitle][2])) / 4;
+
+		// return a boolean
+		return true;
+	}
+
+	function loseStake(address _poster, string memory _postTitle) public returns (bool success) {
+		uint256 aveUpvotes = totalUpvotes / totalPosts;
+
+		// require upvote count to be less than average
+		require(stakes[_poster][_postTitle][1] < aveUpvotes);
+
+		// require one day to have past since post created
+		uint postDate = stakes[_poster][_postTitle][3];
+		uint currDate = now;
+		uint diff = (currDate - postDate) / 60 / 60 / 24;
+
+		require(diff >= 1);
+
+		// set stake to 0
+		stakes[_poster][_postTitle][0] = 0;
 
 		// return a boolean
 		return true;
