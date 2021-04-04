@@ -2,15 +2,16 @@ pragma solidity ^0.5.1;
 
 contract MattCoin {
 	// State variables
-	address private adminAccount = 0x62f1924784fb029F14D5B7575Af7357400B26012;
+	address private adminAccount = 0xa5ebd5E07021F7523E74F46221012CDA18EDf1e4;
 	string public name = "MattCoin";
 	string public symbol = "MCN";
 	string public standard = "MattCoin v1.0";
 	uint256 public totalSupply;
+	uint256 public totalUpvotes;
+	uint256 public totalPosts;
 	mapping(address => uint256) public balanceOf;
 	mapping(address => mapping(address => uint256)) public allowance;
 	mapping(address => mapping(string => uint[])) public stakes;
-
 
 	event Transfer(
 		address indexed _from,
@@ -99,8 +100,43 @@ contract MattCoin {
 		// Emit transfer event
 		emit Transfer(msg.sender, adminAccount, _value);
 
+		// increase totalPosts count
+		// increase totalUpvotes count
+		totalPosts += 1;
+		totalUpvotes += 1;
+
 		// return a boolean
 		return true;
-	} 
+	}
 
+	function upvote(address _poster, string memory _postTitle) public returns (bool success) {
+		// increase upvote count in stakes by 1
+		stakes[_poster][_postTitle][1] += 1;
+
+		// increase totalUpvotes count by 1
+		totalUpvotes += 1;
+
+		// return a boolean
+		return true;
+	}
+
+	function comment(address _poster, string memory _postTitle) public returns (bool success) {
+		// increase comment count in stakes by 1
+		stakes[_poster][_postTitle][2] += 1;
+
+		// return a boolean
+		return true;
+	}
+
+	function updateStake(address _poster, string memory _postTitle) public returns (bool success) {
+		uint256 aveUpvotes = totalUpvotes / totalPosts;
+		// require upvote count to be greater than average
+		require(stakes[_poster][_postTitle][1] >= aveUpvotes);
+
+		// set stake based on upvotes and comments
+		stakes[_poster][_postTitle][0] = 1 + (3 * uint256(stakes[_poster][_postTitle][1]) + 1 * uint256(stakes[_poster][_postTitle][2])) / 4;
+
+		// return a boolean
+		return true;
+	}
 }

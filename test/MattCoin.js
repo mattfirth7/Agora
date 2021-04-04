@@ -149,4 +149,50 @@ contract('MattCoin', function(accounts) {
 			assert.equal(balance.toNumber(), 7499910, 'adds the staked amount to the admin account');
 		});
 	});
+
+	it('updates the upvote count', function() {
+		return MattCoin.deployed().then(function(instance) {
+			tokenInstance = instance;
+			return tokenInstance.upvote.call(accounts[2], 'test');
+		}).then(function(success) {
+			assert.equal(success, true, 'returns true');
+			return tokenInstance.upvote(accounts[2], 'test');
+		}).then(function() {
+			return tokenInstance.stakes(accounts[2], 'test', 1);
+		}).then(function(upvotes) {
+			assert.equal(upvotes, 2, 'Increases upvotes');
+			return tokenInstance.totalUpvotes();
+		}).then(function(upvotes) {
+			assert.equal(upvotes, 2, 'Increases total upvotes');
+		});
+	});
+
+	it('updates the comment count', function() {
+		return MattCoin.deployed().then(function(instance) {
+			tokenInstance = instance;
+			return tokenInstance.comment.call(accounts[2], 'test');
+		}).then(function(success) {
+			assert.equal(success, true, 'returns true');
+			return tokenInstance.comment(accounts[2], 'test');
+		}).then(function() {
+			return tokenInstance.stakes(accounts[2], 'test', 2);
+		}).then(function(comments) {
+			assert.equal(comments, 1, 'Increases comment count');
+		});
+	});
+
+	it('updates the stake', function() {
+		return MattCoin.deployed().then(function(instance) {
+			tokenInstance = instance;
+			return tokenInstance.updateStake.call(accounts[2], 'test');
+		}).then(function(success) {
+			assert.equal(success, true, 'returns true');
+			return tokenInstance.updateStake(accounts[2], 'test');
+		}).then(function() {
+			return tokenInstance.stakes(accounts[2], 'test', 0);
+		}).then(function(stake) {
+			assert.equal(stake, 2, 'Updates stake');
+		});
+	});
+
 });
