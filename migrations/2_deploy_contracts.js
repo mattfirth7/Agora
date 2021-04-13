@@ -1,5 +1,5 @@
-const MattCoin = artifacts.require("MattCoin");
+const Agorae = artifacts.require("Agorae");
 
 module.exports = function (deployer) {
-  deployer.deploy(MattCoin, 10000000);
+  deployer.deploy(Agorae, 10000000);
 };

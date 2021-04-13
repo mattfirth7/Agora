@@ -1,24 +1,24 @@
-var MattCoin = artifacts.require("MattCoin");
+var Agorae = artifacts.require("Agorae");
 
-contract('MattCoin', function(accounts) {
+contract('Agorae', function(accounts) {
 
 	it('initializes the contract with the correct values', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.name();
 		}).then(function(name) {
-			assert.equal(name, 'MattCoin', 'has correct name');
+			assert.equal(name, 'Agorae', 'has correct name');
 			return tokenInstance.symbol();
 		}).then(function(symbol) {
-			assert.equal(symbol, 'MCN', 'has correct symbol');
+			assert.equal(symbol, 'AGRA', 'has correct symbol');
 			return tokenInstance.standard();
 		}).then(function(standard) {
-			assert.equal(standard, 'MattCoin v1.0', 'has correct standard');
+			assert.equal(standard, 'Agorae v1.0', 'has correct standard');
 		});
 	});
 
 	it('allocates the total supply upon deployment', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.totalSupply();
 		}).then(function(totalSupply) {
@@ -30,7 +30,7 @@ contract('MattCoin', function(accounts) {
 	});
 
 	it('transfers ownership', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			// Test 'require' statement first by transferring something larger than the sender's balance
 			return tokenInstance.transfer.call(accounts[1], 999999999999);
@@ -56,7 +56,7 @@ contract('MattCoin', function(accounts) {
 	});
 
 	it('approves tokens for delegated transfer', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.approve.call(accounts[1], 100);
 		}).then(function(success) {
@@ -75,7 +75,7 @@ contract('MattCoin', function(accounts) {
 	});
 
 	it('handles delegated token transfers', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			fromAccount = accounts[2];
 			toAccount = accounts[3];
@@ -117,7 +117,7 @@ contract('MattCoin', function(accounts) {
 	});
 
 	it('creates stake for posts', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.stake.call(100000000000000, 'test', 1, 1);
 		}).then(assert.fail).catch(function(error) {
@@ -151,7 +151,7 @@ contract('MattCoin', function(accounts) {
 	});
 
 	it('updates the upvote count', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.upvote.call(accounts[2], 'test');
 		}).then(function(success) {
@@ -168,7 +168,7 @@ contract('MattCoin', function(accounts) {
 	});
 
 	it('updates the comment count', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.comment.call(accounts[2], 'test');
 		}).then(function(success) {
@@ -182,7 +182,7 @@ contract('MattCoin', function(accounts) {
 	});
 
 	it('updates the stake', function() {
-		return MattCoin.deployed().then(function(instance) {
+		return Agorae.deployed().then(function(instance) {
 			tokenInstance = instance;
 			return tokenInstance.updateStake.call(accounts[2], 'test');
 		}).then(function(success) {

@@ -1,11 +1,11 @@
 pragma solidity ^0.5.1;
 
-contract MattCoin {
+contract Agorae {
 	// State variables
 	address private adminAccount = 0xa5ebd5E07021F7523E74F46221012CDA18EDf1e4;
-	string public name = "MattCoin";
-	string public symbol = "MCN";
-	string public standard = "MattCoin v1.0";
+	string public name = "Agorae";
+	string public symbol = "AGRA";
+	string public standard = "Agorae v1.0";
 	uint256 public totalSupply;
 	uint256 public totalUpvotes;
 	uint256 public totalPosts;
